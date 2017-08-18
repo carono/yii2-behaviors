@@ -40,23 +40,29 @@ class UrlRule extends Component
         return array_keys(\Yii::$app->authManager->getRolesByUser($user->id));
     }
 
+    /**
+     * @param $action
+     * @param $user
+     * @return bool
+     */
     public function compare($action, $user)
     {
-        $needUser = \Yii::$app->user->getIdentity()->getId() && $user->id;
         $needApplication = \Yii::$app->id == $this->application || !$this->application;
         $needRole = false;
         $needAction = $action == $this->_original_action;
         if ($this->role) {
-            foreach ($this->role as $role) {
-                if (self::haveRole($role, $user) || in_array($role, self::getRoles($user))) {
-                    $needRole = true;
-                    break;
+            if ($user) {
+                foreach ($this->role as $role) {
+                    if (self::haveRole($role, $user) || in_array($role, self::getRoles($user))) {
+                        $needRole = true;
+                        break;
+                    }
                 }
             }
         } else {
             $needRole = true;
         }
-        return $needAction && $needUser && $needApplication && $needRole;
+        return $needAction && $needApplication && $needRole;
     }
 
     public function setUrl($value)
