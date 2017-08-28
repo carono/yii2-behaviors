@@ -49,7 +49,7 @@ class UrlBehaviors extends Behavior
         $url = [];
         foreach ($this->normalizeUrlRules() as $rule) {
             if ($rule->compare($action, \Yii::$app->user->getIdentity())) {
-                $url = $rule->url;
+                $url = is_callable($rule->url) ? call_user_func($rule->url, $this->owner) : $rule->url;
                 break;
             }
         }
