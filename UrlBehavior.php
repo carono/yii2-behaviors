@@ -6,7 +6,7 @@ use yii\base\Behavior;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
-class UrlBehaviors extends Behavior
+class UrlBehavior extends Behavior
 {
     protected $_urlRules = [];
 
