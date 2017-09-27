@@ -11,6 +11,7 @@ class UrlBehavior extends Behavior
     protected $_urlRules = [];
 
     public $rules = [];
+    public $functionAlias = 'getUrl';
 
     protected function getUrlRules()
     {
@@ -39,12 +40,25 @@ class UrlBehavior extends Behavior
         return $this->_urlRules;
     }
 
+    public function __call($name, $arguments)
+    {
+        if ($name === $this->functionAlias) {
+            return call_user_func_array([$this, 'getUrl'], $arguments);
+        }
+        return parent::__call($name, $arguments);
+    }
+
+    public function hasMethod($name)
+    {
+        return $name === $this->functionAlias;
+    }
+
     /**
      * @param $action
      * @param bool $asString
      * @return array|mixed|string
      */
-    public function getUrl($action, $asString = false)
+    protected function getUrl($action, $asString = false)
     {
         $url = [];
         foreach ($this->normalizeUrlRules() as $rule) {
