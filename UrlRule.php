@@ -7,7 +7,10 @@ namespace carono\yii2behaviors;
 use carono\yii2rbac\CurrentUser;
 use carono\yii2rbac\RoleManager;
 use yii\base\Component;
+use yii\caching\Cache;
 use yii\db\ActiveRecord;
+use yii\di\Instance;
+use yii\rbac\BaseManager;
 
 /**
  * Class UrlRule
@@ -25,19 +28,61 @@ class UrlRule extends Component
     public $role;
     public $application;
     public $params = [];
+
+    /**
+     * @var string|BaseManager
+     */
+    public $authManager = 'authManager';
+    /**
+     * @var Cache
+     */
+    public $cache;
+
+    public $cacheKey = 'url-rule-behavior';
+
+    public $duration;
+
+    public $dependency;
+
     /**
      * @var ActiveRecord
      */
     public $model;
 
-    protected static function haveRole($role, $user)
+    protected function haveRole($role, $user)
     {
-        return in_array($role, self::getRoles($user));
+        return in_array($role, $this->getRoles($user));
     }
 
-    protected static function getRoles($user)
+    public function init()
     {
-        return array_keys(\Yii::$app->authManager->getRolesByUser($user->id));
+        $this->authManager = Instance::ensure($this->authManager, BaseManager::className());
+        $this->cache = $this->cache ?: (!empty($this->authManager->cache) ? $this->authManager->cache : null);
+        if ($this->cache) {
+            $this->cache = Instance::ensure($this->cache, Cache::className());
+        }
+    }
+
+    protected function setCache($key, $value)
+    {
+        if ($this->cache) {
+            $this->cache->set($key, $value, $this->duration, $this->dependency);
+        }
+    }
+
+    protected function getCache($key)
+    {
+        return $this->cache ? $this->cache->get($key) : null;
+    }
+
+    protected function getRoles($user)
+    {
+        if ($roles = $this->getCache([$this->cacheKey, $user->id])) {
+        } else {
+            $roles = array_keys($this->authManager->getRolesByUser($user->id));
+            $this->setCache([$this->cacheKey, $user->id], $roles);
+        }
+        return $roles;
     }
 
     /**
@@ -53,7 +98,7 @@ class UrlRule extends Component
         if ($this->role) {
             if ($user) {
                 foreach ($this->role as $role) {
-                    if (self::haveRole($role, $user) || in_array($role, self::getRoles($user))) {
+                    if ($this->haveRole($role, $user) || in_array($role, $this->getRoles($user))) {
                         $needRole = true;
                         break;
                     }
