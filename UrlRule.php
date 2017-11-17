@@ -125,7 +125,9 @@ class UrlRule extends Component
             $url = [$url];
         }
         foreach ($this->params as $key => $param) {
-            $url[is_numeric($key) ? $param : $key] = $this->model->getAttribute($param);
+            if (isset($this->model->{$param})) {
+                $url[is_numeric($key) ? $param : $key] = $this->model->{$param};
+            }
         }
         return $url;
     }
