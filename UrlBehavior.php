@@ -12,6 +12,7 @@ class UrlBehavior extends Behavior
 
     public $rules = [];
     public $functionAlias = 'getUrl';
+    public $defaultUrl = ['/'];
 
     protected function getUrlRules()
     {
@@ -67,6 +68,7 @@ class UrlBehavior extends Behavior
                 break;
             }
         }
+        $url = $url ?: $this->defaultUrl;
         return $asString ? Url::to($url, true) : $url;
     }
 }
