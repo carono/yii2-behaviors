@@ -12,7 +12,7 @@ class UrlBehavior extends Behavior
 
     public $rules = [];
     public $functionAlias = 'getUrl';
-    public $defaultUrl = ['/'];
+    public $defaultUrl = null;
 
     protected function getUrlRules()
     {
