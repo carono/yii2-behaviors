@@ -6,6 +6,12 @@ use yii\behaviors\AttributeBehavior;
 use yii\db\BaseActiveRecord;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Class AuthorBehavior
+ *
+ * @package carono\yii2behaviors
+ * @deprecated see Blame
+ */
 class AuthorBehavior extends AttributeBehavior
 {
     public $attributes;

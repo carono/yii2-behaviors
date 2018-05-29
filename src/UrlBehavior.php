@@ -5,7 +5,13 @@ namespace carono\yii2behaviors;
 use yii\base\Behavior;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
+use carono\yii2behaviors\components\UrlRule;
 
+/**
+ * Class UrlBehavior
+ *
+ * @package carono\yii2behaviors
+ */
 class UrlBehavior extends Behavior
 {
     protected $_urlRules = [];
@@ -41,6 +47,11 @@ class UrlBehavior extends Behavior
         return $this->_urlRules;
     }
 
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     */
     public function __call($name, $arguments)
     {
         if ($name === $this->functionAlias) {
@@ -49,6 +60,10 @@ class UrlBehavior extends Behavior
         return parent::__call($name, $arguments);
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
     public function hasMethod($name)
     {
         return $name === $this->functionAlias;
@@ -58,6 +73,7 @@ class UrlBehavior extends Behavior
      * @param $action
      * @param bool $asString
      * @return array|mixed|string
+     * @throws \yii\base\InvalidParamException
      */
     protected function getUrl($action, $asString = false)
     {

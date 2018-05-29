@@ -13,6 +13,9 @@ use yii\base\Behavior;
  */
 class ModelEventBehavior extends Behavior
 {
+    /**
+     * @return array
+     */
     public function events()
     {
         $events = [];

@@ -1,11 +1,9 @@
 <?php
 
 
-namespace carono\yii2behaviors;
+namespace carono\yii2behaviors\components;
 
 
-use carono\yii2rbac\CurrentUser;
-use carono\yii2rbac\RoleManager;
 use yii\base\Component;
 use yii\caching\Cache;
 use yii\db\ActiveRecord;
@@ -70,11 +68,19 @@ class UrlRule extends Component
         }
     }
 
+    /**
+     * @param $key
+     * @return mixed|null
+     */
     protected function getCache($key)
     {
         return $this->cache ? $this->cache->get($key) : null;
     }
 
+    /**
+     * @param $user
+     * @return array|mixed|null
+     */
     protected function getRoles($user)
     {
         if ($roles = $this->getCache([$this->cacheKey, $user->id])) {
@@ -97,7 +103,7 @@ class UrlRule extends Component
         $needAction = $action == $this->_original_action;
         if ($this->role) {
             if ($user) {
-                foreach ($this->role as $role) {
+                foreach ((array)$this->role as $role) {
                     if ($this->haveRole($role, $user) || in_array($role, $this->getRoles($user))) {
                         $needRole = true;
                         break;
@@ -110,6 +116,9 @@ class UrlRule extends Component
         return $needAction && $needApplication && $needRole;
     }
 
+    /**
+     * @param $value
+     */
     public function setUrl($value)
     {
         $this->_url = $value;

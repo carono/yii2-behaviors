@@ -1,5 +1,6 @@
 {
   "name": "carono/yii2-behaviors",
+  "license": "MIT",
   "description": "",
   "type": "yii2-extension",
   "authors": [
@@ -14,7 +15,8 @@
   },
   "autoload": {
     "psr-4": {
-      "carono\\yii2behaviors\\": ""
+      "carono\\yii2behaviors\\": "src",
+      "carono\\yii2behaviors\\components\\": "components"
     }
   }
 }
