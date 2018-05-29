@@ -130,9 +130,12 @@ class UrlRule extends Component
             } elseif (isset($this->model->{$param})) {
                 $value = $this->model->{$param};
             }
-            $url[is_numeric($key) ? $param : $key] = $value;
+            $params[is_numeric($key) ? $param : $key] = $value;
         }
-        return $url;
+        if (is_callable($url)) {
+            return call_user_func_array($url, [$this->model, $params]);
+        }
+        return array_merge($url, $params);
     }
 
     public function setAction($action)
