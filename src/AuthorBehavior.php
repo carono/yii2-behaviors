@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
  * Class AuthorBehavior
  *
  * @package carono\yii2behaviors
- * @deprecated see Blame
+ * @deprecated see \yii\behaviors\BlameableBehavior
  */
 class AuthorBehavior extends AttributeBehavior
 {
