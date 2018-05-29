@@ -1,6 +1,10 @@
+0.3.2
+=====
+* AuthorBehavior помечен как устаревший, использовать \yii\behaviors\BlameableBehavior
+
 0.3.1
 =====
--UrlBehavior. Параметр url теперь принимает closure function ($model, $params). Параметры в функции необходимо мержить вручную
+* UrlBehavior. Параметр url теперь принимает closure function ($model, $params). Параметры в функции необходимо мержить вручную
 [
 	'view',
     'url' => function ($model, $params) {
