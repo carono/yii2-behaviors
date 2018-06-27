@@ -133,11 +133,14 @@ class UrlRule extends Component
         if (is_string($url)) {
             $url = [$url];
         }
+        $params = [];
         foreach ((array)$this->params as $key => $param) {
             if ($param instanceof \Closure) {
                 $value = call_user_func($param, $this->model);
-            } elseif (isset($this->model->{$param})) {
+            } elseif ($this->model->hasAttribute($param) || property_exists($this->model, $param)) {
                 $value = $this->model->{$param};
+            } else {
+                $value = $param;
             }
             $params[is_numeric($key) ? $param : $key] = $value;
         }
