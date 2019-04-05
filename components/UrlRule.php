@@ -5,6 +5,7 @@ namespace carono\yii2behaviors\components;
 
 
 use yii\base\Component;
+use yii\base\InvalidConfigException;
 use yii\caching\Cache;
 use yii\db\ActiveRecord;
 use yii\di\Instance;
@@ -54,7 +55,9 @@ class UrlRule extends Component
 
     public function init()
     {
-        $this->authManager = Instance::ensure($this->authManager, BaseManager::className());
+        if ($this->authManager) {
+            $this->authManager = Instance::ensure($this->authManager, BaseManager::className());
+        }
         $this->cache = $this->cache ?: (!empty($this->authManager->cache) ? $this->authManager->cache : null);
         if ($this->cache) {
             $this->cache = Instance::ensure($this->cache, Cache::className());
@@ -95,6 +98,7 @@ class UrlRule extends Component
      * @param $action
      * @param $user
      * @return bool
+     * @throws InvalidConfigException
      */
     public function compare($action, $user)
     {
@@ -102,6 +106,9 @@ class UrlRule extends Component
         $needRole = false;
         $needAction = $action == $this->_original_action;
         if ($this->role) {
+            if (!$this->authManager) {
+                throw new InvalidConfigException('Check by role is impossible - "authManager" is not set');
+            }
             if ($user) {
                 foreach ((array)$this->role as $role) {
                     if ($this->haveRole($role, $user) || in_array($role, $this->getRoles($user))) {

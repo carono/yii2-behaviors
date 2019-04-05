@@ -18,7 +18,8 @@ class UrlBehavior extends Behavior
 
     public $rules = [];
     public $functionAlias = 'getUrl';
-    public $defaultUrl = null;
+    public $defaultUrl;
+    public $authManager = 'authManager';
 
     protected function getUrlRules()
     {
@@ -41,6 +42,7 @@ class UrlBehavior extends Behavior
             $rule['action'] = $action;
             $rule['class'] = UrlRule::className();
             $rule['model'] = $this->owner;
+            $rule['authManager'] = $this->authManager;
             $urlRule = \Yii::createObject($rule);
             $this->_urlRules[] = $urlRule;
         }
