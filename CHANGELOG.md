@@ -1,3 +1,7 @@
+develop
+======
+* Параметр url принимает массив [Object, 'function'] как closure
+
 0.3.4
 =====
 * Добавлена настройка authManager для \carono\yii2behaviors\UrlBehavior

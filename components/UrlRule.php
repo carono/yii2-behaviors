@@ -131,6 +131,17 @@ class UrlRule extends Component
         $this->_url = $value;
     }
 
+    protected static function isCallable($param)
+    {
+        if ($param instanceof \Closure) {
+            return true;
+        }
+        if (is_array($param) && is_object(current($param))) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * @return mixed
      */
@@ -142,7 +153,7 @@ class UrlRule extends Component
         }
         $params = [];
         foreach ((array)$this->params as $key => $param) {
-            if ($param instanceof \Closure) {
+            if (self::isCallable($param)) {
                 $value = call_user_func($param, $this->model);
             } elseif ($this->model->hasAttribute($param) || property_exists($this->model, $param)) {
                 $value = $this->model->{$param};
